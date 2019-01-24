@@ -1,7 +1,15 @@
 import requests
 from bs4 import BeautifulSoup
+import time
+import os.path
 
-base_url = 'http://10:8080'
+localtime=time.strftime('%Y-%m-%d %H:%M:%S',time.localtime(time.time()))
+year=time.strftime('%Y',time.localtime(time.time()))
+mdhms=time.strftime('%m%d%H%M%S',time.localtime(time.time()))
+fileDay = 'psdiadoc_' + year + mdhms + '/'
+os.mkdir(fileDay)
+
+base_url = 'http://10.181.200.130:8080'
 # 列别获取url
 query_url = base_url + '/QJDmis/SysAdmin_Doc.dmis'
 url_list = []
@@ -65,13 +73,14 @@ def down_list(url_list):
     for urls in url_list:
         # print(urls)
         r = requests.get(urls[3])
-        save_file_name ='psdiadoc/' + urls[0] + urls[1]
+        save_file_name =fileDay + urls[0] + urls[1]
         with open(save_file_name, "wb+") as code:
             code.write(r.content)
             print(cnt,'-',urls[1])
         cnt = cnt + 1
         
 def main():
+    print(fileDay)
     print('downloading......')
     res = get_html(query_url)
     get_down_url(res)
